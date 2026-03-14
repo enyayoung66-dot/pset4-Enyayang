@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>香港时空局 · 森林秘境</title>
+    <style>
+        /* ===== 全局样式 - 春日多巴胺马卡龙配色 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', '幼圆', 'Yuanti SC', 'Quicksand', cursive, sans-serif;
+        }
+
+        html, body {
+            width: 100%;
+            overflow-x: auto;
+            min-width: 1000px;
+        }
+
+        body {
+            background-color: #e8f5e9;
+            color: #2e5c4e;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            position: relative;
+            background-image: url('background.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* 春日森林光晕遮罩 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 182, 193, 0.25) 0%, transparent 35%),
+                radial-gradient(circle at 80% 70%, rgba(165, 214, 167, 0.3) 0%, transparent 40%),
+                radial-gradient(circle at 40% 80%, rgba(255, 241, 118, 0.2) 0%, transparent 45%),
+                radial-gradient(circle at 70% 20%, rgba(129, 212, 250, 0.25) 0%, transparent 40%),
+                radial-gradient(circle at 90% 30%, rgba(255, 171, 145, 0.2) 0%, transparent 35%);
+            pointer-events: none;
+            z-index: 0;
+            min-width: 1000px;
+        }
+
+        /* 游戏主容器 - 半透明糖果玻璃效果 */
+        .game-container {
+            width: 1000px;
+            min-width: 1000px;
+            max-width: 1000px;
+            margin: 20px auto;
+            min-height: 800px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            border: 4px solid rgba(255, 255, 255, 0.6);
+            border-radius: 70px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 0 50px rgba(255, 182, 193, 0.4), 0 0 70px rgba(165, 214, 167, 0.3), 0 20px 40px rgba(0,0,0,0.1), inset 0 0 40px rgba(255, 255, 255, 0.6);
+            z-index: 1;
+        }
+
+        /* 全息投影 - 彩虹糖 */
+        .hologram {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: #ff8a80;
+            font-size: 16px;
+            opacity: 0.9;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 0 #fff, 0 0 15px #ffb6c1;
+            font-weight: bold;
+        }
+
+        /* 技能点显示区域 - 马卡龙卡片 */
+        .skills-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.85);
+            border: 3px solid #ffb6c1;
+            border-radius: 50px;
+            padding: 18px;
+            width: 270px;
+            z-index: 100;
+            box-shadow: 0 0 35px #ffb6c1, 0 10px 25px rgba(255, 182, 193, 0.4);
+            backdrop-filter: blur(5px);
+        }
+
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            color: #ff69b4;
+            text-shadow: 1px 1px 0 white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .skill-name {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(255,255,240,0.5);
+            padding: 3px 10px;
+            border-radius: 30px;
+        }
+
+        .skill-hearts {
+            color: #ff4081;
+            font-size: 20px;
+            letter-spacing: 3px;
+            text-shadow: 0 0 8px #fff;
+        }
+
+        /* 存档栏 - 水果糖 */
+        .save-bar {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #a5d6a7;
+            border-radius: 60px;
+            padding: 12px 30px;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 35px #a5d6a7;
+        }
+
+        .save-slot {
+            background: transparent;
+            border: 2px solid #81d4fa;
+            color: #ff8a80;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-weight: bold;
+            text-shadow: 1px 1px 0 white;
+        }
+
+        .save-slot:hover {
+            background: #81d4fa;
+            color: white;
+            box-shadow: 0 0 35px #81d4fa;
+            transform: scale(1.1) rotate(2deg);
+        }
+
+        /* 页面容器 */
+        .page {
+            width: 100%;
+            min-height: 700px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .active-page {
+            display: flex;
+        }
+
+        /* 标题样式 - 彩虹渐变森林风 */
+        .title {
+            font-size: 52px;
+            text-align: center;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #ff8a80, #ffb74d, #fff176, #a5d6a7, #80cbc4, #ffccbc);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 4px 4px 0 rgba(255,255,255,0.7);
+            letter-spacing: 6px;
+            font-weight: 900;
+            line-height: 1.2;
+            filter: drop-shadow(0 0 20px rgba(255,255,200,0.5));
+        }
+
+        .subtitle {
+            font-size: 22px;
+            color: #ff8a80;
+            text-align: center;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 0 white;
+            background: rgba(255,255,255,0.6);
+            padding: 10px 25px;
+            border-radius: 60px;
+            display: inline-block;
+            font-weight: bold;
+            box-shadow: 0 0 30px rgba(255,138,128,0.3);
+        }
+
+        /* 按钮样式 - 马卡龙色系软糖 */
+        .btn {
+            background: linear-gradient(145deg, #ffb6c1, #ff8a80);
+            border: none;
+            color: white;
+            font-size: 24px;
+            padding: 18px 50px;
+            border-radius: 80px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin: 15px;
+            box-shadow: 0 12px 0 #ff4081, 0 15px 35px rgba(255, 138, 128, 0.5);
+            font-weight: bold;
+            border: 3px solid white;
+        }
+
+        .btn:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 18px 0 #ff4081, 0 25px 45px #ff8a80;
+            background: linear-gradient(145deg, #ffd54f, #ff8a80);
+        }
+
+        .btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 7px 0 #ff4081, 0 15px 35px #ff8a80;
+        }
+
+        .btn:disabled {
+            opacity: 0.3;
+            pointer-events: none;
+            background: #cfd8dc;
+            box-shadow: 0 8px 0 #90a4ae;
+        }
+
+        /* 语言切换 - 彩虹小纽扣 */
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 12px;
+            z-index: 200;
+        }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.9);
+            border: 2px solid #ffb74d;
+            color: #ff8a80;
+            padding: 8px 22px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 0 20px #ffb74d;
+        }
+
+        .lang-btn.active {
+            background: #ff8a80;
+            color: white;
+            border-color: white;
+            box-shadow: 0 0 35px #ff8a80;
+        }
+
+        /* 职业网格 - 水果硬糖卡片 */
+        .career-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 200px);
+            gap: 25px;
+            margin: 30px 0;
+            width: 660px;
+            justify-content: center;
+        }
+
+        .career-card {
+            width: 200px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 3px solid #a5d6a7;
+            border-radius: 50px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            backdrop-filter: blur(5px);
+            z-index: 1;
+            box-shadow: 0 0 35px #a5d6a7;
+        }
+
+        .career-card:hover {
+            transform: translateY(-12px) scale(1.05);
+            border-color: #ffb74d;
+            box-shadow: 0 0 50px #ffb74d;
+        }
+
+        .career-card.selected {
+            border-color: #ff8a80;
+            border-width: 4px;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 0 60px #ff8a80;
+        }
+
+        .career-avatar {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 10px;
+            border-radius: 50%;
+            border: 3px solid #80cbc4;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ffccbc, #b2dfdb);
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 0 35px #80cbc4;
+        }
+
+        .career-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: relative;
+            z-index: 1;
+        }
+
+        .career-name {
+            font-size: 20px;
+            color: #ff8a80;
+            margin-bottom: 8px;
+            font-weight: bold;
+            text-shadow: 2px 2px 0 white;
+        }
+
+        /* 悬浮属性提示 - 棉花糖弹窗 */
+        .tooltip {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.98);
+            border: 3px solid #ffb74d;
+            border-radius: 50px;
+            padding: 18px;
+            width: 250px;
+            left: 50%;
+            top: -200px;
+            transform: translateX(-50%);
+            z-index: 999999;
+            display: none;
+            box-shadow: 0 0 50px #ffb74d, 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px);
+            color: #ff69b4;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .career-card:hover .tooltip {
+            display: block;
+        }
+
+        /* 价值观网格 - 马卡龙色 */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 200px);
+            gap: 25px;
+            margin: 30px 0;
+            width: 660px;
+            justify-content: center;
+        }
+
+        .value-card {
+            width: 200px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 3px solid #80cbc4;
+            border-radius: 50px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 35px #80cbc4;
+        }
+
+        .value-card:hover {
+            transform: scale(1.1) rotate(-2deg);
+            border-color: #ffb6c1;
+            box-shadow: 0 0 60px #ffb6c1;
+        }
+
+        .value-card.selected {
+            border-color: #ffb74d;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 0 70px #ffb74d;
+        }
+
+        .value-emoji {
+            font-size: 55px;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 0 15px #ffb6c1);
+        }
+
+        .value-equip {
+            font-size: 28px;
+            margin-top: 12px;
+            color: #ff8a80;
+            filter: drop-shadow(0 0 8px #ffd54f);
+        }
+
+        /* 抽卡区域 - 彩色旋转森林 */
+        .card-container {
+            width: 800px;
+            height: 400px;
+            position: relative;
+            margin: 30px auto;
+            perspective: 1200px;
+        }
+
+        .floating-cards {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotateCards 20s infinite linear;
+        }
+
+        @keyframes rotateCards {
+            from { transform: rotateY(0deg) rotateX(5deg); }
+            to { transform: rotateY(360deg) rotateX(5deg); }
+        }
+
+        .wave-card {
+            position: absolute;
+            width: 140px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.92);
+            border: 3px solid;
+            border-image: linear-gradient(45deg, #ff8a80, #ffb74d, #fff176, #a5d6a7, #80cbc4) 1;
+            border-radius: 30px;
+            padding: 12px;
+            backface-visibility: hidden;
+            box-shadow: 0 0 35px rgba(255, 138, 128, 0.4);
+            color: #ff69b4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .wave-card:nth-child(1) { transform: rotateY(0deg) translateZ(380px); }
+        .wave-card:nth-child(2) { transform: rotateY(8.57deg) translateZ(380px); }
+        .wave-card:nth-child(3) { transform: rotateY(17.14deg) translateZ(380px); }
+        .wave-card:nth-child(4) { transform: rotateY(25.71deg) translateZ(380px); }
+        .wave-card:nth-child(5) { transform: rotateY(34.29deg) translateZ(380px); }
+        .wave-card:nth-child(6) { transform: rotateY(42.86deg) translateZ(380px); }
+        .wave-card:nth-child(7) { transform: rotateY(51.43deg) translateZ(380px); }
+        .wave-card:nth-child(8) { transform: rotateY(60deg) translateZ(380px); }
+        .wave-card:nth-child(9) { transform: rotateY(68.57deg) translateZ(380px); }
+        .wave-card:nth-child(10) { transform: rotateY(77.14deg) translateZ(380px); }
+        .wave-card:nth-child(11) { transform: rotateY(85.71deg) translateZ(380px); }
+        .wave-card:nth-child(12) { transform: rotateY(94.29deg) translateZ(380px); }
+        .wave-card:nth-child(13) { transform: rotateY(102.86deg) translateZ(380px); }
+        .wave-card:nth-child(14) { transform: rotateY(111.43deg) translateZ(380px); }
+        .wave-card:nth-child(15) { transform: rotateY(120deg) translateZ(380px); }
+        .wave-card:nth-child(16) { transform: rotateY(128.57deg) translateZ(380px); }
+        .wave-card:nth-child(17) { transform: rotateY(137.14deg) translateZ(380px); }
+        .wave-card:nth-child(18) { transform: rotateY(145.71deg) translateZ(380px); }
+        .wave-card:nth-child(19) { transform: rotateY(154.29deg) translateZ(380px); }
+        .wave-card:nth-child(20) { transform: rotateY(162.86deg) translateZ(380px); }
+        .wave-card:nth-child(21) { transform: rotateY(171.43deg) translateZ(380px); }
+        .wave-card:nth-child(22) { transform: rotateY(180deg) translateZ(380px); }
+        .wave-card:nth-child(23) { transform: rotateY(188.57deg) translateZ(380px); }
+        .wave-card:nth-child(24) { transform: rotateY(197.14deg) translateZ(380px); }
+        .wave-card:nth-child(25) { transform: rotateY(205.71deg) translateZ(380px); }
+        .wave-card:nth-child(26) { transform: rotateY(214.29deg) translateZ(380px); }
+        .wave-card:nth-child(27) { transform: rotateY(222.86deg) translateZ(380px); }
+        .wave-card:nth-child(28) { transform: rotateY(231.43deg) translateZ(380px); }
+        .wave-card:nth-child(29) { transform: rotateY(240deg) translateZ(380px); }
+        .wave-card:nth-child(30) { transform: rotateY(248.57deg) translateZ(380px); }
+        .wave-card:nth-child(31) { transform: rotateY(257.14deg) translateZ(380px); }
+        .wave-card:nth-child(32) { transform: rotateY(265.71deg) translateZ(380px); }
+        .wave-card:nth-child(33) { transform: rotateY(274.29deg) translateZ(380px); }
+        .wave-card:nth-child(34) { transform: rotateY(282.86deg) translateZ(380px); }
+        .wave-card:nth-child(35) { transform: rotateY(291.43deg) translateZ(380px); }
+        .wave-card:nth-child(36) { transform: rotateY(300deg) translateZ(380px); }
+        .wave-card:nth-child(37) { transform: rotateY(308.57deg) translateZ(380px); }
+        .wave-card:nth-child(38) { transform: rotateY(317.14deg) translateZ(380px); }
+        .wave-card:nth-child(39) { transform: rotateY(325.71deg) translateZ(380px); }
+        .wave-card:nth-child(40) { transform: rotateY(334.29deg) translateZ(380px); }
+        .wave-card:nth-child(41) { transform: rotateY(342.86deg) translateZ(380px); }
+        .wave-card:nth-child(42) { transform: rotateY(351.43deg) translateZ(380px); }
+
+        /* 抽卡结果显示 */
+        .drawn-card-display {
+            width: 800px;
+            min-height: 250px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.85);
+            border: 3px solid #a5d6a7;
+            border-radius: 60px;
+            text-align: center;
+            box-shadow: 0 0 35px #a5d6a7;
+            color: #ff8a80;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        /* AI温馨提示区域 */
+        .ai-tip-section {
+            width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.85);
+            border: 3px solid #ffb74d;
+            border-radius: 50px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            box-shadow: 0 0 35px #ffb74d;
+        }
+
+        .ai-tip-btn {
+            background: #ffb6c1;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 0 #ff8a80, 0 0 25px #ffb6c1;
+        }
+
+        .ai-tip-btn:hover {
+            background: #ffd54f;
+            transform: scale(1.05);
+            box-shadow: 0 10px 0 #ff8a80, 0 0 35px #ffd54f;
+        }
+
+        .ai-tip-text {
+            color: #ff69b4;
+            font-size: 16px;
+            line-height: 1.6;
+            flex: 1;
+            min-width: 250px;
+            font-weight: bold;
+            text-shadow: 1px 1px 0 white;
+        }
+
+        .ai-external-link {
+            color: #ff8a80;
+            text-decoration: none;
+            border: 2px solid #ffb74d;
+            padding: 8px 15px;
+            border-radius: 40px;
+            transition: all 0.3s;
+            background: rgba(255,255,255,0.5);
+            font-weight: bold;
+        }
+
+        .ai-external-link:hover {
+            background: #ffb74d;
+            color: white;
+            box-shadow: 0 0 30px #ffb74d;
+        }
+
+        /* 对话页面 - 双列布局 */
+        .dialogue-container {
+            display: flex;
+            width: 900px;
+            gap: 30px;
+            margin: 30px 0;
+            justify-content: center;
+        }
+
+        .character-side {
+            width: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .character-portrait {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 4px solid #ffb74d;
+            overflow: hidden;
+            box-shadow: 0 0 40px #ffb74d;
+            margin-bottom: 15px;
+        }
+
+        .character-portrait img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .character-name {
+            color: #ff8a80;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px 0 white;
+        }
+
+        .dialogue-side {
+            width: 600px;
+        }
+
+        .question-box {
+            background: rgba(255, 255, 255, 0.85);
+            border: 3px solid #80cbc4;
+            border-radius: 60px;
+            padding: 30px;
+            color: #ff69b4;
+            font-size: 22px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            box-shadow: 0 0 30px #80cbc4;
+            text-shadow: 1px 1px 0 white;
+            font-weight: bold;
+        }
+
+        .choices-area {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .choice-btn {
+            background: rgba(255, 255, 255, 0.8);
+            border: 3px solid #ffb6c1;
+            color: #ff69b4;
+            padding: 18px 25px;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 20px;
+            text-align: left;
+            box-shadow: 0 0 20px #ffb6c1;
+            font-weight: bold;
+        }
+
+        .choice-btn:hover {
+            background: #ffb6c1;
+            color: white;
+            transform: translateX(15px);
+            box-shadow: 0 0 40px #ffb6c1;
+        }
+
+        /* 统一输入框样式 - 马卡龙色 */
+        .ai-input, textarea {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid #a5d6a7;
+            color: #ff69b4;
+            padding: 18px;
+            border-radius: 50px;
+            font-size: 18px;
+            resize: vertical;
+            box-shadow: 0 0 25px #a5d6a7;
+            outline: none;
+            font-weight: bold;
+        }
+
+        .ai-input:focus, textarea:focus {
+            border-color: #ffb74d;
+            box-shadow: 0 0 40px #ffb74d;
+        }
+
+        /* AI助手区域 */
+        .ai-section {
+            width: 700px;
+            background: rgba(255, 255, 255, 0.85);
+            border: 3px solid #ffb74d;
+            border-radius: 70px;
+            padding: 35px;
+            margin: 30px 0;
+            box-shadow: 0 0 40px #ffb74d;
+        }
+
+        /* 结局页面 */
+        .ending-screen {
+            text-align: center;
+            color: #ff69b4;
+            padding: 40px;
+        }
+
+        .ending-title {
+            font-size: 60px;
+            margin-bottom: 30px;
+            text-shadow: 4px 4px 0 white, 0 0 40px #ffb6c1;
+        }
+
+        .ending-text {
+            font-size: 26px;
+            color: #ff8a80;
+            line-height: 1.8;
+            font-weight: bold;
+        }
+
+        /* BGM控制 - 小彩蛋 */
+        .bgm-control {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 200;
+        }
+
+        .bgm-btn {
+            background: rgba(255,255,255,0.8);
+            border: 3px solid #ffb6c1;
+            color: #ff8a80;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 0 30px #ffb6c1;
+        }
+
+        .bgm-btn:hover {
+            background: #ffb6c1;
+            color: white;
+            transform: scale(1.15);
+            box-shadow: 0 0 45px #ffb6c1;
+        }
+
+        /* 隐藏类 */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- BGM -->
+    <audio id="bgm" loop preload="auto">
+        <source src="bgm.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="game-container" id="gameContainer">
+        <!-- 全息投影 -->
+        <div class="hologram" id="hologramText">🌸 FOREST · 2036 🌸</div>
+
+        <!-- 语言切换 -->
+        <div class="lang-switch">
+            <button class="lang-btn active" onclick="setLanguage('zh')">中文</button>
+            <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+        </div>
+
+        <!-- 技能点面板 -->
+        <div class="skills-panel" id="skillsPanel">
+            <div class="skill-item">
+                <span class="skill-name" id="strengthName">💪 体力</span>
+                <span class="skill-hearts" id="strengthHearts">❤️❤️❤️❤️❤️</span>
+            </div>
+            <div class="skill-item">
+                <span class="skill-name" id="intelligenceName">🧠 智力</span>
+                <span class="skill-hearts" id="intelligenceHearts">❤️❤️❤️❤️❤️</span>
+            </div>
+            <div class="skill-item">
+                <span class="skill-name" id="charismaName">✨ 魅力</span>
+                <span class="skill-hearts" id="charismaHearts">❤️❤️❤️❤️❤️</span>
+            </div>
+            <div class="skill-item">
+                <span class="skill-name" id="techName">🔧 技术</span>
+                <span class="skill-hearts" id="techHearts">❤️❤️❤️❤️❤️</span>
+            </div>
+            <div class="skill-item">
+                <span class="skill-name" id="instinctName">🌪️ 直觉</span>
+                <span class="skill-hearts" id="instinctHearts">❤️❤️❤️❤️❤️</span>
+            </div>
+        </div>
+
+        <!-- BGM控制 -->
+        <div class="bgm-control">
+            <button class="bgm-btn" onclick="toggleBGM()" id="bgmBtn">🔊</button>
+        </div>
+
+        <!-- 页面1：序幕 -->
+        <div class="page active-page" id="page1">
+            <div class="title" id="page1Title">🌸 时空局 森林秘境 🌸</div>
+            <div class="subtitle" id="page1Sub1">2036年3月14日 14:32:07</div>
+            <div class="subtitle" id="page1Sub2">时空异常指数：97.3%</div>
+            <div class="subtitle" id="page1Sub3">平行世界崩塌概率：99.8%</div>
+            
+            <div class="dialogue-box" style="width:600px; text-align:center; background:rgba(255,255,255,0.85); border:3px solid #a5d6a7; border-radius:50px; padding:25px; box-shadow:0 0 30px #a5d6a7;" id="page1Brief">
+                你是香港时空局顶尖特工，代号"灿"。未来浪潮正在扭曲森林秘境，你需要穿越到2036年，阻止世界毁灭。
+            </div>
+
+            <button class="btn" onclick="startGame()" id="startBtn">🌸 开始春日任务 🌸</button>
+        </div>
+
+        <!-- 页面2：职业选择 -->
+        <div class="page" id="page2">
+            <div class="title" id="page2Title">选择你的森林身份</div>
+            <div class="career-grid" id="careerGrid"></div>
+            <button class="btn" onclick="nextPage(3)" id="careerNextBtn" disabled>下一关 →</button>
+        </div>
+
+        <!-- 页面3：价值观选择 -->
+        <div class="page" id="page3">
+            <div class="title" id="page3Title">选择春日价值观</div>
+            <div class="values-grid" id="valuesGrid"></div>
+            <button class="btn" onclick="nextPage(4)" id="valuesNextBtn" disabled>下一关 →</button>
+        </div>
+
+        <!-- 页面4：抽卡 -->
+        <div class="page" id="page4">
+            <div class="title" id="page4Title">抽取未来浪潮</div>
+            <div class="card-container">
+                <div class="floating-cards" id="floatingCards"></div>
+            </div>
+            
+            <div class="drawn-card-display" id="drawnCardDisplay">
+                <span id="waitingText">🌸 等待抽卡...</span>
+            </div>
+            
+            <div class="ai-tip-section">
+                <button class="ai-tip-btn" onclick="showAITip()" id="aiTipBtn">🤖 AI 温馨提示</button>
+                <span class="ai-tip-text" id="aiTipText">点击按钮获取卡牌解读</span>
+                <a href="#" class="ai-external-link" onclick="window.open('https://www.deepseek.com/', '_blank')">🔗 DeepSeek</a>
+                <a href="#" class="ai-external-link" onclick="window.open('https://www.doubao.com/', '_blank')">🔗 豆包</a>
+            </div>
+            
+            <button class="btn" onclick="drawCards()" id="drawBtn">抽取5张卡牌</button>
+            <button class="btn hidden" onclick="nextPage(5)" id="cardNextBtn">下一关 →</button>
+        </div>
+
+        <!-- 页面5：森林头条 -->
+        <div class="page" id="page5">
+            <div class="title" id="page5Title">2036 森林头条</div>
+            <div class="dialogue-box" id="headlineBox" style="width:600px; font-size:24px; text-align:center; background:rgba(255,255,255,0.85); border:3px solid #80cbc4; border-radius:50px; padding:30px; box-shadow:0 0 30px #80cbc4;"></div>
+            <button class="btn" onclick="nextPage(6)" id="page5Next">下一关 →</button>
+        </div>
+
+        <!-- 页面6：战术讨论 -->
+        <div class="page" id="page6">
+            <div class="title" id="page6Title">🗣️ 战术讨论</div>
+            <div class="dialogue-container" style="width:800px;">
+                <div class="character-side">
+                    <div class="character-portrait">
+                        <img src="ai_assistant.png" alt="AI Assistant" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\'><rect width=\'200\' height=\'200\' fill=\'%23ffe0f0\'/><text x=\'100\' y=\'120\' font-size=\'80\' text-anchor=\'middle\' fill=\'%23ff8a80\'>🤖</text></svg>'">
+                    </div>
+                    <div class="character-name" id="aiAssistantName">AI助手 · Flora</div>
+                </div>
+                <div class="dialogue-side" style="width:500px;">
+                    <div class="question-box" id="tacticalQuestion" style="min-height:100px;">
+                        特工，你抽到了这些未来浪潮。请告诉我你的战术计划...
+                    </div>
+                    <textarea class="ai-input" id="tacticalInput" rows="4" placeholder="输入你的战术计划..."></textarea>
+                    <div style="display:flex; gap:10px; margin-top:15px;">
+                        <button class="btn" onclick="submitTacticalPlan()" style="padding:10px 25px;" id="submitTacticalBtn">提交战术</button>
+                        <button class="btn" onclick="openAIAssistant()" style="padding:10px 25px;" id="callAIBtn">🤖 呼叫AI助手</button>
+                    </div>
+                    <div id="tacticalFeedback" style="margin-top:20px; color:#ff69b4; font-size:16px;"></div>
+                </div>
+            </div>
+            <button class="btn hidden" onclick="nextPage(8)" id="tacticalNextBtn">下一关 →</button>
+        </div>
+
+        <!-- 页面8：对话抉择 -->
+        <div class="page" id="page8">
+            <div class="title" id="page8Title">森林抉择</div>
+            <div class="dialogue-container">
+                <div class="character-side">
+                    <div class="character-portrait">
+                        <img src="人物形象.png" alt="Character" id="characterPortrait">
+                    </div>
+                    <div class="character-name" id="characterName"></div>
+                </div>
+                <div class="dialogue-side">
+                    <div class="question-box" id="questionBox"></div>
+                    <div class="choices-area" id="choicesContainer"></div>
+                </div>
+            </div>
+            <button class="btn hidden" onclick="nextPage(9)" id="choiceNextBtn">下一关 →</button>
+        </div>
+
+        <!-- 页面9：结局 -->
+        <div class="page" id="page9">
+            <div class="ending-screen">
+                <div class="ending-title" id="endingTitle"></div>
+                <div class="ending-text" id="endingText"></div>
+                <div style="font-size: 70px; margin: 40px 0;" id="endingEmoji"></div>
+                <button class="btn" onclick="resetGame()" id="restartBtn">🌸 重新开始 🌸</button>
+            </div>
+        </div>
+
+        <!-- 存档栏 -->
+        <div class="save-bar">
+            <button class="save-slot" onclick="saveGame()" id="saveBtn">💾 存档</button>
+            <button class="save-slot" onclick="loadGame()" id="loadBtn">📂 读档</button>
+        </div>
+    </div>
+
+    <script>
+        // ===== 语言包 - 完全分离中英文 =====
+        const translations = {
+            zh: {
+                hologram: '🌸 森林 · 2036 🌸',
+                strength: '💪 体力',
+                intelligence: '🧠 智力',
+                charisma: '✨ 魅力',
+                tech: '🔧 技术',
+                instinct: '🌪️ 直觉',
+                save: '💾 存档',
+                load: '📂 读档',
+                page1Title: '🌸 时空局 森林秘境 🌸',
+                page1Sub1: '2036年3月14日 14:32:07',
+                page1Sub2: '时空异常指数：97.3%',
+                page1Sub3: '平行世界崩塌概率：99.8%',
+                page1Brief: '你是香港时空局顶尖特工，代号"灿"。未来浪潮正在扭曲森林秘境，你需要穿越到2036年，阻止世界毁灭。',
+                startBtn: '🌸 开始任务 🌸',
+                page2Title: '选择你的身份',
+                page3Title: '选择价值观',
+                page4Title: '抽取未来浪潮',
+                page5Title: '2036 森林头条',
+                page6Title: '🗣️ 战术讨论',
+                page8Title: '抉择',
+                next: '下一关 →',
+                draw: '抽取5张卡牌',
+                waiting: '🌸 等待抽卡...',
+                aiTipBtn: '🤖 AI 温馨提示',
+                aiTipText: '点击按钮获取卡牌解读',
+                aiAssistantName: 'AI助手 · Flora',
+                tacticalQuestion: '特工，你抽到了这些未来浪潮。请告诉我你的战术计划...',
+                tacticalPlaceholder: '输入你的战术计划...',
+                submitTactical: '提交战术',
+                callAI: '🤖 呼叫AI助手',
+                emptyPlan: '⚠️ 请告诉我你的战术计划！',
+                analyzing: '🤔 AI正在分析你的战术...',
+                mentionedCards: '✅ 你提到了 {count} 张卡牌',
+                careerBonus: '✅ 你结合了职业专长: +2 {skill}',
+                keywordsBonus: '✅ 战术关键词识别: 全属性+1',
+                failKeywords: '❌ 检测到消极词汇: 随机属性-2',
+                success: '🎉 战术通过！点击继续前进',
+                fail: '❌ 战术不够具体，智力-1',
+                hint: '💡 提示：至少提到2张抽到的卡牌，或使用拯救/未来等关键词',
+                restart: '🌸 重新开始 🌸',
+                successReport: '📋 任务成功报告',
+                failReport: '📋 任务失败报告',
+                rankS: 'S级 · 完美特工',
+                rankA: 'A级 · 优秀',
+                rankB: 'B级 · 合格',
+                successText: '你成功扫描未来浪潮，森林秘境迎来新生！2036年重建开始！',
+                failReason1: '两项以上技能耗尽',
+                failReason2: '任务关键节点判断失误',
+                failText: '技能点耗尽，世界崩塌...正在传送回时空局...',
+                agent: '特工代号',
+                coreValue: '核心价值观',
+                waves: '扫描到的未来浪潮',
+                skills: '最终技能状态',
+                tactical: '战术计划',
+                rating: '任务评级',
+                none: '未选择',
+                noWaves: '未抽取任何浪潮',
+                notRecorded: '未记录'
+            },
+            en: {
+                hologram: '🌸 FOREST · 2036 🌸',
+                strength: '💪 STR',
+                intelligence: '🧠 INT',
+                charisma: '✨ CHA',
+                tech: '🔧 TECH',
+                instinct: '🌪️ INST',
+                save: '💾 SAVE',
+                load: '📂 LOAD',
+                page1Title: '🌸 HK TIME AGENCY · FOREST SECRET 🌸',
+                page1Sub1: '2036.03.14 14:32:07',
+                page1Sub2: 'Time Anomaly: 97.3%',
+                page1Sub3: 'World Collapse: 99.8%',
+                page1Brief: 'You are a top agent of HK Time Agency, codename "Sun". Future waves are distorting the forest secret realm. Travel to 2036 to prevent the apocalypse.',
+                startBtn: '🌸 START MISSION 🌸',
+                page2Title: 'CHOOSE YOUR FOREST IDENTITY',
+                page3Title: 'CHOOSE VALUES',
+                page4Title: 'DRAW FUTURE WAVES',
+                page5Title: '2036 FOREST HEADLINE',
+                page6Title: '🗣️ TACTICAL DISCUSSION',
+                page8Title: 'FOREST CHOICES',
+                next: 'NEXT →',
+                draw: 'DRAW 5 CARDS',
+                waiting: '🌸 WAITING FOR DRAW...',
+                aiTipBtn: '🤖 AI TIP',
+                aiTipText: 'Click for card interpretation',
+                aiAssistantName: 'AI · Flora',
+                tacticalQuestion: 'Agent, you have drawn these future waves. Tell me your tactical plan...',
+                tacticalPlaceholder: 'Enter your tactical plan...',
+                submitTactical: 'SUBMIT',
+                callAI: '🤖 CALL AI',
+                emptyPlan: '⚠️ Please enter your tactical plan!',
+                analyzing: '🤔 AI is analyzing your tactics...',
+                mentionedCards: '✅ You mentioned {count} cards',
+                careerBonus: '✅ Career synergy: +2 {skill}',
+                keywordsBonus: '✅ Keywords detected: +1 all stats',
+                failKeywords: '❌ Negative words detected: -2 random stat',
+                success: '🎉 Tactics approved! Proceed',
+                fail: '❌ Tactics too vague, -1 intelligence',
+                hint: '💡 Hint: Mention at least 2 drawn cards, or use save/future keywords',
+                restart: '🌸 RESTART 🌸',
+                successReport: '📋 MISSION SUCCESS REPORT',
+                failReport: '📋 MISSION FAILED REPORT',
+                rankS: 'S RANK · PERFECT AGENT',
+                rankA: 'A RANK · EXCELLENT',
+                rankB: 'B RANK · PASS',
+                successText: 'You scanned the future waves! The forest realm begins to rebuild!',
+                failReason1: 'Two or more skills depleted',
+                failReason2: 'Critical decision failure',
+                failText: 'Skills depleted, world collapsed... Returning to Time Agency...',
+                agent: 'Agent',
+                coreValue: 'Core Value',
+                waves: 'Future Waves Scanned',
+                skills: 'Final Skills Status',
+                tactical: 'Tactical Plan',
+                rating: 'Mission Rating',
+                none: 'Not selected',
+                noWaves: 'No waves drawn',
+                notRecorded: 'Not recorded'
+            }
+        };
+
+        // ===== 全局变量 =====
+        let currentPage = 1;
+        let currentLanguage = 'zh';
+        let selectedCareer = null;
+        let selectedValue = null;
+        let drawnWaves = [];
+        let currentQuestion = 0;
+        let bgmPlaying = false;
+        
+        let playerSkills = {
+            strength: 5,
+            intelligence: 5,
+            charisma: 5,
+            tech: 5,
+            instinct: 5
+        };
+
+        const careers = [
+            { id: 'agent', nameZh: '⚡ 疾风特工', nameEn: '⚡ Agent', emoji: '🕶️', skills: { strength: 5, intelligence: 3, charisma: 3, tech: 2, instinct: 4 } },
+            { id: 'scientist', nameZh: '🔬 森林科学家', nameEn: '🔬 Scientist', emoji: '🔬', skills: { strength: 2, intelligence: 5, charisma: 2, tech: 5, instinct: 3 } },
+            { id: 'hacker', nameZh: '💻 自然黑客', nameEn: '💻 Hacker', emoji: '💻', skills: { strength: 2, intelligence: 4, charisma: 3, tech: 5, instinct: 4 } },
+            { id: 'doctor', nameZh: '🏥 森林医者', nameEn: '🏥 Doctor', emoji: '🏥', skills: { strength: 3, intelligence: 4, charisma: 4, tech: 4, instinct: 3 } },
+            { id: 'engineer', nameZh: '🔧 生态工程师', nameEn: '🔧 Engineer', emoji: '🔧', skills: { strength: 4, intelligence: 3, charisma: 2, tech: 5, instinct: 3 } },
+            { id: 'artist', nameZh: '🎨 森林艺术家', nameEn: '🎨 Artist', emoji: '🎨', skills: { strength: 2, intelligence: 3, charisma: 5, tech: 2, instinct: 5 } }
+        ];
+
+        const values = [
+            { id: 'hero', nameZh: '拯救他人', nameEn: 'Helping Others', emoji: '🦸', outfit: { hat: '🎩', top: '🦺', bottom: '👖', shoes: '🥾', weapon: '🗡️' }, bonus: { strength: 1, charisma: 1, tech: -1 } },
+            { id: 'merchant', nameZh: '赚取金钱', nameEn: 'Making Money', emoji: '💰', outfit: { hat: '🧢', top: '👔', bottom: '🩳', shoes: '👞', weapon: '💵' }, bonus: { intelligence: 1, tech: 1, charisma: -1 } },
+            { id: 'artist', nameZh: '创意工作', nameEn: 'Creative Work', emoji: '🎨', outfit: { hat: '🎭', top: '🎨', bottom: '👖', shoes: '👟', weapon: '🖌️' }, bonus: { charisma: 2, strength: -1 } },
+            { id: 'guardian', nameZh: '工作稳定', nameEn: 'Job Security', emoji: '🛡️', outfit: { hat: '🪖', top: '🥼', bottom: '👖', shoes: '👢', weapon: '🛡️' }, bonus: { instinct: 1, tech: 1, intelligence: -1 } },
+            { id: 'family', nameZh: '家庭时光', nameEn: 'Family Time', emoji: '👪', outfit: { hat: '🧢', top: '👕', bottom: '👖', shoes: '👟', weapon: '🏡' }, bonus: { charisma: 1, instinct: 1, strength: -1 } }
+        ];
+
+        const waves = [
+            { name: 'Future Workplace', domain: '经济', stage: 'Driving', desc: '远程办公 / 技术融合 / 新型组织架构', tech: false, penalty: { type: 'charisma', amount: 1 } },
+            { name: 'Space Data Economy', domain: '经济', stage: 'Emerging', desc: '卫星影像 / 太空数据分析商业应用', tech: false, penalty: { type: 'intelligence', amount: 1 } },
+            { name: 'He Economy', domain: '经济', stage: 'Driving', desc: '男性消费经济崛起（晚婚 / 男性气质变迁）', tech: false, penalty: { type: 'strength', amount: 1 } },
+            { name: 'Green Concrete', domain: '环境', stage: 'Brewing', desc: '低碳水泥 / 混凝土替代材料', tech: false, penalty: { type: 'strength', amount: 1 } },
+            { name: 'Plant Milk', domain: '环境', stage: 'Trending', desc: '燕麦 / 麻 / 香蕉等植物奶低耗提取', tech: false, penalty: { type: 'charisma', amount: 1 } },
+            { name: 'Decarbonisation', domain: '环境', stage: 'Driving', desc: '减少化石燃料温室气体排放', tech: false, penalty: { type: 'tech', amount: 1 } },
+            { name: 'Direct Air Capture', domain: '环境', stage: 'Brewing', desc: '大气捕碳技术（200-700 美元 / 吨）', tech: false, penalty: { type: 'intelligence', amount: 2 } },
+            { name: 'Orbital Debris Concern', domain: '环境', stage: 'Trending', desc: '太空垃圾成轨道可持续威胁', tech: false, penalty: { type: 'instinct', amount: 1 } },
+            { name: 'Earth Observation for Climate', domain: '环境', stage: 'Driving', desc: '卫星监测温室气体 / 海平面 / 森林砍伐', tech: false, penalty: { type: 'tech', amount: 1 } },
+            { name: 'Neuropolitics', domain: '治理', stage: 'Signaling', desc: '神经科学应用于政治传播 / 选民分析', tech: false, penalty: { type: 'intelligence', amount: 1 } },
+            { name: 'EU AI Act', domain: '治理', stage: 'Trending', desc: '欧盟 AI 监管框架（最终协商中）', tech: false, penalty: { type: 'tech', amount: 1 } },
+            { name: 'Reskilling Imperative', domain: '治理', stage: 'Emerging', desc: '未来职业工人再培训需求', tech: false, penalty: { type: 'charisma', amount: 2 } },
+            { name: 'Right to be Forgotten', domain: '治理', stage: 'Signaling', desc: '网络个人信息删除合法权', tech: false, penalty: { type: 'instinct', amount: 1 } },
+            { name: 'Health as a Public Duty', domain: '治理', stage: 'Trending', desc: '政府主导公共健康 / 医疗体系', tech: false, penalty: { type: 'strength', amount: 1 } },
+            { name: 'Bird-Safe Skyline Initiative', domain: '治理', stage: 'Signaling', desc: '纽约调暗灯光减少鸟类碰撞', tech: false, penalty: { type: 'charisma', amount: 1 } },
+            { name: 'AI-Facilitated Democracy', domain: '治理', stage: 'Brewing', desc: 'AI 辅助公民协商 / 公共意见总结', tech: false, penalty: { type: 'intelligence', amount: 1 } },
+            { name: 'Space Militarization', domain: '治理', stage: 'Trending', desc: '太空监视 / 反卫星国防技术', tech: false, penalty: { type: 'tech', amount: 2 } },
+            { name: 'Interplanetary Governance', domain: '治理', stage: 'Brewing', desc: '火星等星际定居法律政治框架', tech: false, penalty: { type: 'instinct', amount: 2 } },
+            { name: 'Off-World Identity', domain: '社会', stage: 'Signaling', desc: '星际永久居住的人类身份文化探讨', tech: false, penalty: { type: 'charisma', amount: 2 } },
+            { name: 'Intentional Tech Use', domain: '社会', stage: 'Brewing', desc: '刻意限制技术使用提升心理健康', tech: false, penalty: { type: 'instinct', amount: 1 } },
+            { name: 'Nano 3D Printing', domain: '技术', stage: 'Brewing', desc: '高精度微型定制部件打印', tech: true, penalty: { type: 'tech', amount: 2 } },
+            { name: 'Social Commerce', domain: '技术', stage: 'Trending', desc: '社交网络赋能电商', tech: true, penalty: { type: 'charisma', amount: 1 } },
+            { name: 'Human-Robot Co-working', domain: '技术', stage: 'Emerging', desc: '人机协作提升生产力', tech: true, penalty: { type: 'strength', amount: 1 } },
+            { name: 'Technology-Driven Education', domain: '技术', stage: 'Driving', desc: 'AI 自适应个性化学习', tech: true, penalty: { type: 'intelligence', amount: 1 } },
+            { name: 'Multiomic Sequencing', domain: '技术', stage: 'Brewing', desc: '多组学测序全维度生物分析', tech: true, penalty: { type: 'tech', amount: 2 } },
+            { name: 'Blockchain and Digital Currencies', domain: '技术', stage: 'Driving', desc: '去中心化账本点对点金融', tech: true, penalty: { type: 'intelligence', amount: 1 } },
+            { name: 'Super-Efficient Solar', domain: '技术', stage: 'Emerging', desc: '晶体层提升太阳能电池效率', tech: true, penalty: { type: 'tech', amount: 1 } },
+            { name: 'Digital Provenance', domain: '技术', stage: 'Emerging', desc: '水印 / 加密验证数字内容溯源', tech: true, penalty: { type: 'intelligence', amount: 1 } },
+            { name: 'AI Ethics', domain: '技术', stage: 'Emerging', desc: 'AI 偏见 / 透明性 / 问责制伦理探讨', tech: true, penalty: { type: 'charisma', amount: 1 } },
+            { name: 'Peer-to-Peer and Open-Source Approaches', domain: '技术', stage: 'Driving', desc: '去中心化开源协作', tech: true, penalty: { type: 'tech', amount: 1 } },
+            { name: 'Soft Robotics', domain: '技术', stage: 'Brewing', desc: '柔性材料仿生机器人（安全人机交互）', tech: true, penalty: { type: 'strength', amount: 2 } },
+            { name: 'Quantum Computing', domain: '技术', stage: 'Emerging', desc: '量子比特高速计算', tech: true, penalty: { type: 'intelligence', amount: 2 } },
+            { name: 'Urban Air Mobility', domain: '技术', stage: 'Emerging', desc: '城市小型自动驾驶 / 有人飞行器', tech: true, penalty: { type: 'tech', amount: 1 } },
+            { name: 'DeepSeek Moment', domain: '技术', stage: 'Signaling', desc: '中国低成本 AI 模型对标西方', tech: true, penalty: { type: 'intelligence', amount: 1 } },
+            { name: 'Space Pharmaceuticals', domain: '福祉', stage: 'Signaling', desc: '微重力研发 / 制造特殊药物', tech: false, penalty: { type: 'tech', amount: 1 } },
+            { name: 'Social Prescriptions', domain: '福祉', stage: 'Signaling', desc: '医生开具 “社交处方” 缓解孤独', tech: false, penalty: { type: 'charisma', amount: 1 } },
+            { name: 'Quantified Patient', domain: '福祉', stage: 'Trending', desc: '技术追踪个人数据改善健康', tech: false, penalty: { type: 'intelligence', amount: 1 } },
+            { name: 'Chronobiology Medicine', domain: '福祉', stage: 'Brewing', desc: '生物钟定时治疗提升疗效', tech: false, penalty: { type: 'instinct', amount: 1 } },
+            { name: 'Body Hardware Implants', domain: '福祉', stage: 'Trending', desc: '植入式设备增强人体能力 / 美学', tech: false, penalty: { type: 'strength', amount: 2 } },
+            { name: 'Transhumanists', domain: '福祉', stage: 'Brewing', desc: '技术增强人类能力理念', tech: false, penalty: { type: 'charisma', amount: 1 } },
+            { name: 'Psychedelic-Assisted Therapy', domain: '福祉', stage: 'Brewing', desc: '致幻剂辅助心理治疗抑郁 / PTSD', tech: false, penalty: { type: 'instinct', amount: 2 } }
+        ];
+
+        const questions = [
+            {
+                choices: [
+                    { effect: { strength: -1 } },
+                    { effect: { tech: -1 } },
+                    { effect: { instinct: -1 } }
+                ]
+            },
+            {
+                choices: [
+                    { effect: { charisma: -1 } },
+                    { effect: { strength: -1 } },
+                    { effect: { intelligence: -1 } }
+                ]
+            },
+            {
+                choices: [
+                    { effect: { instinct: -1 } },
+                    { effect: { strength: -1 } },
+                    { effect: { intelligence: -1 } }
+                ]
+            }
+        ];
+
+        const questionTexts = {
+            zh: [
+                { q: '你在森林发现一个废弃的树屋，但里面可能还有幸存者。你选择？', 
+                  c: ['🔍 先搜索幸存者 (体力-1)', '💣 直接炸开树屋 (技术-1)', '🕵️ 观察等待 (直觉-1)'] },
+                { q: '一只受伤的小鹿向你求助，但它身边有发光的能量晶石。你选择？', 
+                  c: ['💰 救治小鹿 (魅力-1)', '⚡ 拿走晶石 (体力-1)', '🤝 寻求帮助 (智力-1)'] },
+                { q: '前方出现巨大食人花，你只有30秒决策。你选择？', 
+                  c: ['🏃 逃跑 (直觉-1)', '🔫 正面战斗 (体力-1)', '🧠 设陷阱 (智力-1)'] }
+            ],
+            en: [
+                { q: 'You find an abandoned treehouse in the forest, but survivors might be inside. What do you do?', 
+                  c: ['🔍 Search survivors (STR -1)', '💣 Blow it up (TECH -1)', '🕵️ Observe (INST -1)'] },
+                { q: 'An injured deer asks for help, but there are glowing crystals nearby. What do you do?', 
+                  c: ['💰 Heal the deer (CHA -1)', '⚡ Take crystals (STR -1)', '🤝 Seek help (INT -1)'] },
+                { q: 'A giant man-eating flower appears! 30 seconds. What do you do?', 
+                  c: ['🏃 Run (INST -1)', '🔫 Fight (STR -1)', '🧠 Trap (INT -1)'] }
+            ]
+        };
+
+        // ===== 初始化 =====
+        function init() {
+            renderCareers();
+            renderValues();
+            renderFloatingCards();
+            updateSkillsDisplay();
+            applyLanguage();
+        }
+
+        // ===== 应用语言 =====
+        function applyLanguage() {
+            const t = translations[currentLanguage];
+            
+            document.getElementById('hologramText').textContent = t.hologram;
+            document.getElementById('strengthName').textContent = t.strength;
+            document.getElementById('intelligenceName').textContent = t.intelligence;
+            document.getElementById('charismaName').textContent = t.charisma;
+            document.getElementById('techName').textContent = t.tech;
+            document.getElementById('instinctName').textContent = t.instinct;
+            document.getElementById('saveBtn').textContent = t.save;
+            document.getElementById('loadBtn').textContent = t.load;
+            
+            document.getElementById('page1Title').textContent = t.page1Title;
+            document.getElementById('page1Sub1').textContent = t.page1Sub1;
+            document.getElementById('page1Sub2').textContent = t.page1Sub2;
+            document.getElementById('page1Sub3').textContent = t.page1Sub3;
+            document.getElementById('page1Brief').textContent = t.page1Brief;
+            document.getElementById('startBtn').textContent = t.startBtn;
+            
+            document.getElementById('page2Title').textContent = t.page2Title;
+            document.getElementById('careerNextBtn').textContent = t.next;
+            
+            document.getElementById('page3Title').textContent = t.page3Title;
+            document.getElementById('valuesNextBtn').textContent = t.next;
+            
+            document.getElementById('page4Title').textContent = t.page4Title;
+            document.getElementById('drawBtn').textContent = t.draw;
+            document.getElementById('cardNextBtn').textContent = t.next;
+            document.getElementById('waitingText').textContent = t.waiting;
+            document.getElementById('aiTipBtn').textContent = t.aiTipBtn;
+            document.getElementById('aiTipText').textContent = t.aiTipText;
+            
+            document.getElementById('page5Title').textContent = t.page5Title;
+            document.getElementById('page5Next').textContent = t.next;
+            
+            document.getElementById('page6Title').textContent = t.page6Title;
+            document.getElementById('aiAssistantName').textContent = t.aiAssistantName;
+            document.getElementById('tacticalQuestion').innerHTML = t.tacticalQuestion;
+            document.getElementById('tacticalInput').placeholder = t.tacticalPlaceholder;
+            document.getElementById('submitTacticalBtn').textContent = t.submitTactical;
+            document.getElementById('callAIBtn').textContent = t.callAI;
+            document.getElementById('tacticalNextBtn').textContent = t.next;
+            
+            document.getElementById('page8Title').textContent = t.page8Title;
+            document.getElementById('choiceNextBtn').textContent = t.next;
+            
+            document.getElementById('restartBtn').textContent = t.restart;
+            
+            renderCareers();
+            renderValues();
+            if (currentPage === 8) renderQuestion();
+            
+            if (currentPage === 6) {
+                const questionBox = document.getElementById('tacticalQuestion');
+                let cardList = '';
+                drawnWaves.forEach(wave => {
+                    cardList += `🌸 ${wave.name} `;
+                });
+                questionBox.innerHTML = (currentLanguage === 'zh' ? '特工，你抽到了这些未来浪潮：<br>' : 'Agent, you drew:<br>') + cardList + '<br><br>' + (currentLanguage === 'zh' ? '请告诉我你的战术计划...' : 'Tell me your plan...');
+            }
+        }
+
+        // ===== 语言切换 =====
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            applyLanguage();
+        }
+
+        // ===== 开始游戏并播放音乐 =====
+        function startGame() {
+            const bgm = document.getElementById('bgm');
+            bgm.volume = 0.5;
+            bgm.play().catch(e => console.log('播放失败:', e));
+            nextPage(2);
+        }
+
+        // ===== BGM控制 =====
+        function toggleBGM() {
+            const bgm = document.getElementById('bgm');
+            const btn = document.getElementById('bgmBtn');
+            bgm.volume = 0.5;
+            if (bgmPlaying) {
+                bgm.pause();
+                btn.innerHTML = '🔇';
+            } else {
+                bgm.play().catch(e => console.log('BGM播放失败'));
+                btn.innerHTML = '🔊';
+            }
+            bgmPlaying = !bgmPlaying;
+        }
+
+        // ===== 渲染职业 =====
+        function renderCareers() {
+            const grid = document.getElementById('careerGrid');
+            grid.innerHTML = '';
+            careers.forEach(career => {
+                const card = document.createElement('div');
+                card.className = `career-card ${selectedCareer === career.id ? 'selected' : ''}`;
+                card.onclick = () => selectCareer(career.id);
+                
+                const name = currentLanguage === 'zh' ? career.nameZh : career.nameEn;
+                const t = translations[currentLanguage];
+                
+                card.innerHTML = `
+                    <div class="career-avatar">
+                        <img src="${career.id}.png" alt="${name}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'120\'><rect width=\'120\' height=\'120\' fill=\'%23ffe0f0\'/><text x=\'60\' y=\'70\' font-size=\'50\' text-anchor=\'middle\' fill=\'%23ff8a80\'>${career.emoji}</text></svg>'">
+                    </div>
+                    <div class="career-name">${name}</div>
+                    <div class="tooltip">
+                        <div>${t.strength}: ${'❤️'.repeat(career.skills.strength)}${'🖤'.repeat(5-career.skills.strength)}</div>
+                        <div>${t.intelligence}: ${'❤️'.repeat(career.skills.intelligence)}${'🖤'.repeat(5-career.skills.intelligence)}</div>
+                        <div>${t.charisma}: ${'❤️'.repeat(career.skills.charisma)}${'🖤'.repeat(5-career.skills.charisma)}</div>
+                        <div>${t.tech}: ${'❤️'.repeat(career.skills.tech)}${'🖤'.repeat(5-career.skills.tech)}</div>
+                        <div>${t.instinct}: ${'❤️'.repeat(career.skills.instinct)}${'🖤'.repeat(5-career.skills.instinct)}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // ===== 选择职业 =====
+        function selectCareer(careerId) {
+            selectedCareer = careerId;
+            const career = careers.find(c => c.id === careerId);
+            playerSkills = { ...career.skills };
+            updateSkillsDisplay();
+            
+            document.getElementById('characterPortrait').src = `${careerId}.png`;
+            document.getElementById('characterName').innerHTML = currentLanguage === 'zh' ? career.nameZh : career.nameEn;
+            
+            document.querySelectorAll('.career-card').forEach(c => c.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            document.getElementById('careerNextBtn').disabled = false;
+            autoSave();
+        }
+
+        // ===== 渲染价值观 =====
+        function renderValues() {
+            const grid = document.getElementById('valuesGrid');
+            grid.innerHTML = '';
+            values.forEach(value => {
+                const card = document.createElement('div');
+                card.className = `value-card ${selectedValue === value.id ? 'selected' : ''}`;
+                card.onclick = () => selectValue(value.id);
+                
+                const name = currentLanguage === 'zh' ? value.nameZh : value.nameEn;
+                const outfit = Object.values(value.outfit).join(' ');
+                
+                card.innerHTML = `
+                    <div class="value-emoji">${value.emoji}</div>
+                    <div style="color: #ff69b4; font-weight:bold;">${name}</div>
+                    <div class="value-equip">${outfit}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // ===== 选择价值观 =====
+        function selectValue(valueId) {
+            if (selectedValue === valueId) return;
+            
+            if (selectedValue) {
+                const oldValue = values.find(v => v.id === selectedValue);
+                Object.entries(oldValue.bonus).forEach(([skill, amount]) => {
+                    playerSkills[skill] = Math.min(5, Math.max(0, playerSkills[skill] - amount));
+                });
+            }
+            
+            selectedValue = valueId;
+            const newValue = values.find(v => v.id === valueId);
+            
+            Object.entries(newValue.bonus).forEach(([skill, amount]) => {
+                playerSkills[skill] = Math.min(5, Math.max(0, playerSkills[skill] + amount));
+            });
+            
+            updateSkillsDisplay();
+            
+            document.querySelectorAll('.value-card').forEach(c => c.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            document.getElementById('valuesNextBtn').disabled = false;
+            autoSave();
+        }
+
+        // ===== 渲染悬浮卡片 =====
+        function renderFloatingCards() {
+            const container = document.getElementById('floatingCards');
+            container.innerHTML = '';
+            waves.forEach((wave, index) => {
+                const card = document.createElement('div');
+                card.className = 'wave-card';
+                card.innerHTML = `
+                    <div style="font-size: 18px; margin-bottom: 5px;">🌸</div>
+                    <div style="font-weight: bold; color: #ff69b4; font-size: 12px;">${wave.name}</div>
+                    <div style="font-size: 10px; margin: 5px 0; color: #ff8a80;">${wave.domain}</div>
+                    <div style="font-size: 10px; color: ${wave.tech ? '#ffb74d' : '#a5d6a7'};">${wave.stage}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // ===== 抽卡 =====
+        function drawCards() {
+            drawnWaves = [];
+            
+            const techCards = waves.filter(w => w.tech === true);
+            const shuffledTech = [...techCards].sort(() => Math.random() - 0.5);
+            const selectedTech = shuffledTech.slice(0, 2);
+            drawnWaves.push(...selectedTech);
+            
+            const nonTechCards = waves.filter(w => w.tech === false);
+            const shuffledNonTech = [...nonTechCards].sort(() => Math.random() - 0.5);
+            const selectedNonTech = shuffledNonTech.slice(0, 3);
+            drawnWaves.push(...selectedNonTech);
+            
+            const display = document.getElementById('drawnCardDisplay');
+            display.innerHTML = '';
+            display.style.display = 'flex';
+            display.style.flexWrap = 'wrap';
+            display.style.justifyContent = 'center';
+            display.style.gap = '15px';
+            
+            drawnWaves.forEach((wave) => {
+                const cardElement = document.createElement('div');
+                cardElement.style.width = '160px';
+                cardElement.style.height = '220px';
+                cardElement.style.background = 'rgba(255, 255, 255, 0.9)';
+                cardElement.style.border = '3px solid #ffb6c1';
+                cardElement.style.borderRadius = '30px';
+                cardElement.style.padding = '15px';
+                cardElement.style.display = 'flex';
+                cardElement.style.flexDirection = 'column';
+                cardElement.style.alignItems = 'center';
+                cardElement.style.justifyContent = 'center';
+                cardElement.style.boxShadow = '0 0 25px #ffb6c1';
+                cardElement.style.color = '#ff69b4';
+                cardElement.style.fontSize = '14px';
+                cardElement.style.textAlign = 'center';
+                cardElement.style.animation = 'cardAppear 0.5s ease';
+                cardElement.style.fontWeight = 'bold';
+                cardElement.innerHTML = `
+                    <div style="font-size: 30px; margin-bottom: 10px;">🌸</div>
+                    <div style="font-weight: bold; margin-bottom: 8px; color: #ff8a80;">${wave.name}</div>
+                    <div style="color: #a5d6a7; font-size: 12px; margin-bottom: 5px;">${wave.domain} · ${wave.stage}</div>
+                    <div style="color: #80cbc4; font-size: 11px; margin-bottom: 10px;">${wave.desc}</div>
+                    <div style="color: #ffb74d; font-size: 12px; font-weight: bold;">-${wave.penalty.amount} ${wave.penalty.type}</div>
+                    ${wave.tech ? '<div style="color: #ff8a80; font-size: 10px; margin-top: 5px;">⚡ 技术卡</div>' : ''}
+                `;
+                display.appendChild(cardElement);
+            });
+            
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes cardAppear {
+                    from { opacity: 0; transform: scale(0.8); }
+                    to { opacity: 1; transform: scale(1); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            drawnWaves.forEach(wave => {
+                playerSkills[wave.penalty.type] = Math.max(0, playerSkills[wave.penalty.type] - wave.penalty.amount);
+            });
+            
+            updateSkillsDisplay();
+            
+            document.getElementById('drawBtn').classList.add('hidden');
+            document.getElementById('cardNextBtn').classList.remove('hidden');
+            
+            autoSave();
+            if (checkGameOver()) return;
+        }
+
+        // ===== AI温馨提示 =====
+        function showAITip() {
+            const tipText = document.getElementById('aiTipText');
+            if (drawnWaves.length === 0) {
+                tipText.innerHTML = currentLanguage === 'zh' ? '请先抽取卡牌！' : 'Please draw cards first!';
+                return;
+            }
+            
+            const randomIndex = Math.floor(Math.random() * drawnWaves.length);
+            const wave = drawnWaves[randomIndex];
+            
+            const interpretation = currentLanguage === 'zh' 
+                ? `【${wave.name}解读】\n领域：${wave.domain}\n阶段：${wave.stage}\n描述：${wave.desc}\n影响：消耗${wave.penalty.amount}点${wave.penalty.type}\n${wave.tech ? '⚡ 这是一张技术卡，对STEM发展至关重要' : '🌱 这是一张人文卡，关注社会发展'}`
+                : `【${wave.name} Analysis】\nDomain: ${wave.domain}\nStage: ${wave.stage}\nDescription: ${wave.desc}\nEffect: -${wave.penalty.amount} ${wave.penalty.type}\n${wave.tech ? '⚡ Tech Card - Key for STEM' : '🌱 Humanity Card - Social Impact'}`;
+            
+            tipText.innerHTML = interpretation.replace(/\n/g, '<br>');
+        }
+
+        // ===== 生成头条 =====
+        function generateHeadline() {
+            const headline = document.getElementById('headlineBox');
+            if (drawnWaves.length === 0) {
+                headline.innerHTML = currentLanguage === 'zh' ? '🔥 2036森林危机！未知浪潮导致秩序崩塌！🔥' : '🔥 2036 Forest Crisis! Unknown waves lead to collapse!🔥';
+                return;
+            }
+            const waveNames = drawnWaves.map(w => w.name).join(' · ');
+            headline.innerHTML = currentLanguage === 'zh' 
+                ? `🔥 2036森林危机！${waveNames} 导致秩序崩塌！🔥`
+                : `🔥 2036 Forest Crisis! ${waveNames} lead to collapse!🔥`;
+        }
+
+        // ===== 渲染问题 =====
+        function renderQuestion() {
+            const texts = questionTexts[currentLanguage][currentQuestion];
+            document.getElementById('questionBox').innerHTML = texts.q;
+            
+            const container = document.getElementById('choicesContainer');
+            container.innerHTML = '';
+            texts.c.forEach((choice, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.innerHTML = choice;
+                btn.onclick = () => selectChoice(index);
+                container.appendChild(btn);
+            });
+        }
+
+        // ===== 选择选项 =====
+        function selectChoice(index) {
+            const effect = questions[currentQuestion].choices[index].effect;
+            
+            Object.entries(effect).forEach(([skill, amount]) => {
+                playerSkills[skill] = Math.min(5, Math.max(0, playerSkills[skill] + amount));
+            });
+            
+            updateSkillsDisplay();
+            
+            if (checkGameOver()) return;
+            
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                renderQuestion();
+            } else {
+                document.getElementById('choiceNextBtn').classList.remove('hidden');
+                showEnding('success');
+            }
+            autoSave();
+        }
+
+        // ===== 检查游戏结束 =====
+        function checkGameOver() {
+            const skills = ['strength', 'intelligence', 'charisma', 'tech', 'instinct'];
+            let zeroCount = 0;
+            skills.forEach(skill => {
+                if (playerSkills[skill] <= 0) zeroCount++;
+            });
+            
+            if (zeroCount >= 2) {
+                showEnding('fail');
+                return true;
+            }
+            return false;
+        }
+
+        // ===== 更新技能显示 =====
+        function updateSkillsDisplay() {
+            const skills = ['strength', 'intelligence', 'charisma', 'tech', 'instinct'];
+            skills.forEach(skill => {
+                const value = playerSkills[skill];
+                const hearts = '❤️'.repeat(value) + '🖤'.repeat(5 - value);
+                document.getElementById(`${skill}Hearts`).innerHTML = hearts;
+            });
+        }
+
+        // ===== 显示任务报告 =====
+        function showEnding(type) {
+            nextPage(9);
+            const title = document.getElementById('endingTitle');
+            const text = document.getElementById('endingText');
+            const emoji = document.getElementById('endingEmoji');
+            const t = translations[currentLanguage];
+            
+            const tacticalInput = document.getElementById('tacticalInput')?.value || t.notRecorded;
+            
+            const careerObj = careers.find(c => c.id === selectedCareer);
+            const careerName = careerObj ? (currentLanguage === 'zh' ? careerObj.nameZh : careerObj.nameEn) : t.none;
+            
+            const valueObj = values.find(v => v.id === selectedValue);
+            const valueName = valueObj ? (currentLanguage === 'zh' ? valueObj.nameZh : valueObj.nameEn) : t.none;
+            
+            const waveList = drawnWaves.length > 0 ?
+                drawnWaves.map(w => `🌸 ${w.name} (${w.domain})`).join('<br>') :
+                t.noWaves;
+            
+            let zeroCount = 0;
+            const skills = ['strength', 'intelligence', 'charisma', 'tech', 'instinct'];
+            skills.forEach(skill => {
+                if (playerSkills[skill] <= 0) zeroCount++;
+            });
+            
+            const skillStatus = `
+${t.strength}: ${'❤️'.repeat(playerSkills.strength)}${'🖤'.repeat(5-playerSkills.strength)} ${playerSkills.strength}/5<br>
+${t.intelligence}: ${'❤️'.repeat(playerSkills.intelligence)}${'🖤'.repeat(5-playerSkills.intelligence)} ${playerSkills.intelligence}/5<br>
+${t.charisma}: ${'❤️'.repeat(playerSkills.charisma)}${'🖤'.repeat(5-playerSkills.charisma)} ${playerSkills.charisma}/5<br>
+${t.tech}: ${'❤️'.repeat(playerSkills.tech)}${'🖤'.repeat(5-playerSkills.tech)} ${playerSkills.tech}/5<br>
+${t.instinct}: ${'❤️'.repeat(playerSkills.instinct)}${'🖤'.repeat(5-playerSkills.instinct)} ${playerSkills.instinct}/5
+            `;
+            
+            if (type === 'success') {
+                const totalHearts = playerSkills.strength + playerSkills.intelligence + playerSkills.charisma + playerSkills.tech + playerSkills.instinct;
+                
+                let rating = '', ratingColor = '', ratingEmoji = '';
+                if (totalHearts >= 20) {
+                    rating = currentLanguage === 'zh' ? t.rankS : t.rankS;
+                    ratingColor = '#ff69b4';
+                    ratingEmoji = '🏆';
+                } else if (totalHearts >= 15) {
+                    rating = currentLanguage === 'zh' ? t.rankA : t.rankA;
+                    ratingColor = '#ffb74d';
+                    ratingEmoji = '⭐';
+                } else {
+                    rating = currentLanguage === 'zh' ? t.rankB : t.rankB;
+                    ratingColor = '#a5d6a7';
+                    ratingEmoji = '✅';
+                }
+                
+                title.innerHTML = t.successReport;
+                
+                text.innerHTML = currentLanguage === 'zh' ? `
+                    <div style="text-align:left; background:rgba(255,255,255,0.7); padding:20px; border-radius:40px; margin-top:20px; border:3px solid #ffb6c1;">
+                        <h3 style="color:#ff69b4; margin-bottom:15px;">【香港时空局 · 任务总结】</h3>
+                        <p style="color:#ff8a80; margin:10px 0;"><span style="color:#ff69b4;">🔹 ${t.agent}：</span>${careerName}</p>
+                        <p style="color:#ff8a80; margin:10px 0;"><span style="color:#ff69b4;">🔹 ${t.coreValue}：</span>${valueName}</p>
+                        <p style="color:#ff69b4; margin:15px 0 5px 0;">🔹 ${t.waves}：</p>
+                        <p style="color:#a5d6a7; margin:5px 0 15px 20px;">${waveList}</p>
+                        <p style="color:#ff69b4; margin:15px 0 5px 0;">🔹 ${t.skills}：</p>
+                        <p style="color:#80cbc4; margin:5px 0 15px 20px;">${skillStatus}</p>
+                        <p style="color:#ff69b4; margin:15px 0 5px 0;">🔹 ${t.tactical}：</p>
+                        <p style="color:#ffb74d; margin:5px 0 15px 20px; font-style:italic;">"${tacticalInput}"</p>
+                        <div style="border-top:3px solid #ffb6c1; margin:20px 0; padding-top:20px;">
+                            <p style="color:${ratingColor}; font-size:24px; text-align:center; font-weight:bold;">${ratingEmoji} ${t.rating}：${rating}</p>
+                            <p style="color:#ff8a80; text-align:center;">${t.successText}</p>
+                        </div>
+                    </div>
+                ` : `
+                    <div style="text-align:left; background:rgba(255,255,255,0.7); padding:20px; border-radius:40px; margin-top:20px; border:3px solid #ffb6c1;">
+                        <h3 style="color:#ff69b4; margin-bottom:15px;">【HK TIME AGENCY · MISSION REPORT】</h3>
+                        <p style="color:#ff8a80; margin:10px 0;"><span style="color:#ff69b4;">🔹 ${t.agent}：</span>${careerName}</p>
+                        <p style="color:#ff8a80; margin:10px 0;"><span style="color:#ff69b4;">🔹 ${t.coreValue}：</span>${valueName}</p>
+                        <p style="color:#ff69b4; margin:15px 0 5px 0;">🔹 ${t.waves}：</p>
+                        <p style="color:#a5d6a7; margin:5px 0 15px 20px;">${waveList}</p>
+                        <p style="color:#ff69b4; margin:15px 0 5px 0;">🔹 ${t.skills}：</p>
+                        <p style="color:#80cbc4; margin:5px 0 15px 20px;">${skillStatus}</p>
+                        <p style="color:#ff69b4; margin:15px 0 5px 0;">🔹 ${t.tactical}：</p>
+                        <p style="color:#ffb74d; margin:5px 0 15px 20px; font-style:italic;">"${tacticalInput}"</p>
+                        <div style="border-top:3px solid #ffb6c1; margin:20px 0; padding-top:20px;">
+                            <p style="color:${ratingColor}; font-size:24px; text-align:center; font-weight:bold;">${ratingEmoji} ${t.rating}: ${rating}</p>
+                            <p style="color:#ff8a80; text-align:center;">${t.successText}</p>
+                        </div>
+                    </div>
+                `;
+                emoji.innerHTML = '🌸🏆✨';
+                
+            } else {
+                title.innerHTML = t.failReport;
+                
+                let failReason = zeroCount >= 2 ? t.failReason1 : t.failReason2;
+                
+                text.innerHTML = currentLanguage === 'zh' ? `
+                    <div style="text-align:left; background:rgba(255,255,255,0.7); padding:20px; border-radius:40px; margin-top:20px; border:3px solid #ffb6c1;">
+                        <h3 style="color:#ff69b4; margin-bottom:15px;">【香港时空局 · 任务总结】</h3>
+                        <p style="color:#ff8a80; margin:10px 0;"><span style="color:#ff69b4;">🔹 ${t.agent}：</span>${careerName}</p>
+                        <p style="color:#ff8a80; margin:10px 0;"><span style="color:#ff69b4;">🔹 ${t.coreValue}：</span>${valueName}</p>
+                        <p style="color:#ff69b4; margin:15px 0 5px 0;">🔹 ${t.waves}：</p>
+                        <p style="color:#a5d6a7; margin:5px 0 15px 20px;">${waveList}</p>
+                        <p style="color:#ff69b4; margin:15px 0 5px 0;">🔹 ${t.skills}：</p>
+                        <p style="color:#80cbc4; margin:5px 0 15px 20px;">${skillStatus}</p>
+                        <p style="color:#ff69b4; margin:15px 0 5px 0;">🔹 ${t.tactical}：</p>
+                        <p style="color:#ffb74d; margin:5px 0 15px 20px; font-style:italic;">"${tacticalInput}"</p>
+                        <div style="border-top:3px solid #ffb6c1; margin:20px 0; padding-top:20px;">
+                            <p style="color:#ff8a80; font-size:24px; text-align:center; font-weight:bold;">❌ ${t.rating}：F</p>
+                            <p style="color:#a5d6a7; text-align:center;">${t.failText}</p>
+                            <p style="color:#ffb74d; text-align:center;">原因：${failReason}</p>
+                        </div>
+                    </div>
+                ` : `
+                    <div style="text-align:left; background:rgba(255,255,255,0.7); padding:20px; border-radius:40px; margin-top:20px; border:3px solid #ffb6c1;">
+                        <h3 style="color:#ff69b4; margin-bottom:15px;">【HK TIME AGENCY · MISSION REPORT】</h3>
+                        <p style="color:#ff8a80; margin:10px 0;"><span style="color:#ff69b4;">🔹 ${t.agent}：</span>${careerName}</p>
+                        <p style="color:#ff8a80; margin:10px 0;"><span style="color:#ff69b4;">🔹 ${t.coreValue}：</span>${valueName}</p>
+                        <p style="color:#ff69b4; margin:15px 0 5px 0;">🔹 ${t.waves}：</p>
+                        <p style="color:#a5d6a7; margin:5px 0 15px 20px;">${waveList}</p>
+                        <p style="color:#ff69b4; margin:15px 0 5px 0;">🔹 ${t.skills}：</p>
+                        <p style="color:#80cbc4; margin:5px 0 15px 20px;">${skillStatus}</p>
+                        <p style="color:#ff69b4; margin:15px 0 5px 0;">🔹 ${t.tactical}：</p>
+                        <p style="color:#ffb74d; margin:5px 0 15px 20px; font-style:italic;">"${tacticalInput}"</p>
+                        <div style="border-top:3px solid #ffb6c1; margin:20px 0; padding-top:20px;">
+                            <p style="color:#ff8a80; font-size:24px; text-align:center; font-weight:bold;">❌ ${t.rating}: F</p>
+                            <p style="color:#a5d6a7; text-align:center;">${t.failText}</p>
+                            <p style="color:#ffb74d; text-align:center;">Cause: ${failReason}</p>
+                        </div>
+                    </div>
+                `;
+                emoji.innerHTML = '💔🌸';
+            }
+        }
+
+        // ===== 页面切换 =====
+        function nextPage(pageNum) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+            document.getElementById(`page${pageNum}`).classList.add('active-page');
+            currentPage = pageNum;
+            
+            if (pageNum === 5) generateHeadline();
+            if (pageNum === 6) {
+                document.getElementById('tacticalInput').value = '';
+                document.getElementById('tacticalFeedback').innerHTML = '';
+                document.getElementById('tacticalNextBtn').classList.add('hidden');
+                
+                const questionBox = document.getElementById('tacticalQuestion');
+                let cardList = '';
+                drawnWaves.forEach(wave => {
+                    cardList += `🌸 ${wave.name} `;
+                });
+                questionBox.innerHTML = (currentLanguage === 'zh' ? '特工，你抽到了这些未来浪潮：<br>' : 'Agent, you drew:<br>') + cardList + '<br><br>' + (currentLanguage === 'zh' ? '请告诉我你的战术计划...' : 'Tell me your plan...');
+            }
+            if (pageNum === 8) {
+                currentQuestion = 0;
+                renderQuestion();
+            }
+            autoSave();
+        }
+
+        // ===== 存档 =====
+        function saveGame() {
+            const gameState = {
+                page: currentPage,
+                skills: playerSkills,
+                career: selectedCareer,
+                value: selectedValue,
+                waves: drawnWaves,
+                question: currentQuestion,
+                lang: currentLanguage
+            };
+            localStorage.setItem('forest_save', JSON.stringify(gameState));
+            alert(currentLanguage === 'zh' ? '存档成功！' : 'Game saved!');
+        }
+
+        // ===== 读档 =====
+        function loadGame() {
+            const saved = localStorage.getItem('forest_save');
+            if (!saved) {
+                alert(currentLanguage === 'zh' ? '无存档' : 'No save found');
+                return;
+            }
+            
+            const state = JSON.parse(saved);
+            currentPage = state.page;
+            playerSkills = state.skills;
+            selectedCareer = state.career;
+            selectedValue = state.value;
+            drawnWaves = state.waves;
+            currentQuestion = state.question;
+            setLanguage(state.lang);
+            
+            updateSkillsDisplay();
+            renderCareers();
+            renderValues();
+            
+            if (selectedCareer) {
+                const career = careers.find(c => c.id === selectedCareer);
+                document.getElementById('characterPortrait').src = `${selectedCareer}.png`;
+                document.getElementById('characterName').innerHTML = currentLanguage === 'zh' ? career.nameZh : career.nameEn;
+            }
+            
+            nextPage(currentPage);
+        }
+
+        // ===== 自动存档 =====
+        function autoSave() {
+            const gameState = {
+                page: currentPage,
+                skills: playerSkills,
+                career: selectedCareer,
+                value: selectedValue,
+                waves: drawnWaves,
+                question: currentQuestion,
+                lang: currentLanguage
+            };
+            localStorage.setItem('forest_auto', JSON.stringify(gameState));
+        }
+
+        // ===== 重置游戏 =====
+        function resetGame() {
+            selectedCareer = null;
+            selectedValue = null;
+            drawnWaves = [];
+            currentQuestion = 0;
+            playerSkills = { strength: 5, intelligence: 5, charisma: 5, tech: 5, instinct: 5 };
+            
+            document.getElementById('careerNextBtn').disabled = true;
+            document.getElementById('valuesNextBtn').disabled = true;
+            document.getElementById('drawBtn').classList.remove('hidden');
+            document.getElementById('cardNextBtn').classList.add('hidden');
+            document.getElementById('choiceNextBtn').classList.add('hidden');
+            document.getElementById('tacticalNextBtn').classList.add('hidden');
+            
+            const waitingText = translations[currentLanguage].waiting;
+            document.getElementById('drawnCardDisplay').innerHTML = '<span id="waitingText">' + waitingText + '</span>';
+            
+            const tacticalInput = document.getElementById('tacticalInput');
+            if (tacticalInput) {
+                tacticalInput.value = '';
+            }
+            const tacticalFeedback = document.getElementById('tacticalFeedback');
+            if (tacticalFeedback) {
+                tacticalFeedback.innerHTML = '';
+            }
+            
+            document.getElementById('characterPortrait').src = '人物形象.png';
+            document.getElementById('characterName').innerHTML = '';
+            
+            updateSkillsDisplay();
+            renderCareers();
+            renderValues();
+            renderFloatingCards();
+            
+            nextPage(1);
+        }
+
+        // ===== 战术讨论 =====
+        function submitTacticalPlan() {
+            const input = document.getElementById('tacticalInput').value.trim();
+            const feedback = document.getElementById('tacticalFeedback');
+            const nextBtn = document.getElementById('tacticalNextBtn');
+            const t = translations[currentLanguage];
+            
+            if (input === '') {
+                feedback.innerHTML = t.emptyPlan;
+                return;
+            }
+            
+            feedback.innerHTML = t.analyzing;
+            
+            setTimeout(() => {
+                const analysis = analyzeTacticalInput(input);
+                
+                let resultHtml = '';
+                let success = false;
+                
+                if (analysis.mentionedCards.length > 0) {
+                    resultHtml += t.mentionedCards.replace('{count}', analysis.mentionedCards.length) + '<br>';
+                    analysis.mentionedCards.forEach(card => {
+                        resultHtml += `  - ${card.name}: +1 ${card.penalty.type}<br>`;
+                        playerSkills[card.penalty.type] = Math.min(5, playerSkills[card.penalty.type] + 1);
+                    });
+                    success = true;
+                }
+                
+                if (analysis.mentionedCareer) {
+                    resultHtml += t.careerBonus.replace('{skill}', analysis.careerBonus) + '<br>';
+                    playerSkills[analysis.careerBonus] = Math.min(5, playerSkills[analysis.careerBonus] + 2);
+                    success = true;
+                }
+                
+                if (analysis.hasKeywords) {
+                    resultHtml += t.keywordsBonus + '<br>';
+                    ['strength', 'intelligence', 'charisma', 'tech', 'instinct'].forEach(skill => {
+                        playerSkills[skill] = Math.min(5, playerSkills[skill] + 1);
+                    });
+                    success = true;
+                }
+                
+                if (analysis.hasFailKeywords) {
+                    resultHtml += t.failKeywords + '<br>';
+                    const skills = ['strength', 'intelligence', 'charisma', 'tech', 'instinct'];
+                    const randomSkill = skills[Math.floor(Math.random() * skills.length)];
+                    playerSkills[randomSkill] = Math.max(0, playerSkills[randomSkill] - 2);
+                }
+                
+                if (success) {
+                    resultHtml += t.success;
+                    nextBtn.classList.remove('hidden');
+                } else {
+                    resultHtml += t.fail + '<br>';
+                    playerSkills.intelligence = Math.max(0, playerSkills.intelligence - 1);
+                    resultHtml += t.hint;
+                }
+                
+                feedback.innerHTML = resultHtml;
+                updateSkillsDisplay();
+                checkGameOver();
+            }, 1500);
+        }
+
+        // ===== 分析战术输入 =====
+        function analyzeTacticalInput(input) {
+            const lowerInput = input.toLowerCase();
+            
+            const mentionedCards = drawnWaves.filter(wave => 
+                lowerInput.includes(wave.name.toLowerCase())
+            );
+            
+            const career = careers.find(c => c.id === selectedCareer);
+            const mentionedCareer = career && (
+                lowerInput.includes(career.nameZh.toLowerCase()) || 
+                lowerInput.includes(career.nameEn.toLowerCase()) ||
+                lowerInput.includes(selectedCareer)
+            );
+            
+            const careerBonusMap = {
+                agent: 'strength',
+                scientist: 'intelligence',
+                hacker: 'tech',
+                doctor: 'strength',
+                engineer: 'tech',
+                artist: 'charisma'
+            };
+            
+            const keywords = ['save', 'rescue', 'future', 'together', '拯救', '未来', '一起', '保护'];
+            const hasKeywords = keywords.some(k => lowerInput.includes(k));
+            
+            const failKeywords = ['give up', 'surrender', '放弃', '投降', '逃跑'];
+            const hasFailKeywords = failKeywords.some(k => lowerInput.includes(k));
+            
+            return {
+                mentionedCards,
+                mentionedCareer,
+                careerBonus: careerBonusMap[selectedCareer],
+                hasKeywords,
+                hasFailKeywords
+            };
+        }
+
+        // ===== 内置AI助手（弹窗）=====
+        function openAIAssistant() {
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.backgroundColor = 'rgba(0,0,0,0.3)';
+            modal.style.backdropFilter = 'blur(8px)';
+            modal.style.display = 'flex';
+            modal.style.justifyContent = 'center';
+            modal.style.alignItems = 'center';
+            modal.style.zIndex = '100000';
+            
+            const t = translations[currentLanguage];
+            
+            modal.innerHTML = `
+                <div style="width:600px; background:rgba(255,255,255,0.9); border:4px solid #ffb6c1; border-radius:60px; padding:30px; box-shadow:0 0 60px #ffb6c1;">
+                    <div style="display:flex; align-items:center; gap:20px; margin-bottom:20px;">
+                        <div style="font-size:60px;">🌸</div>
+                        <div>
+                            <div style="color:#ff69b4; font-size:24px; font-weight:bold;">${t.aiAssistantName}</div>
+                            <div style="color:#ff8a80;">${currentLanguage === 'zh' ? '森林战术顾问' : 'Forest Tactical Advisor'}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background:rgba(255,240,245,0.7); border:2px solid #a5d6a7; border-radius:40px; padding:20px; margin-bottom:20px; color:#ff69b4; height:200px; overflow-y:auto; font-weight:bold;" id="aiChatHistory">
+                        <div>🤖: ${currentLanguage === 'zh' ? '你好，特工。我是Flora，可以回答你关于游戏的问题。' : 'Hello Agent. I am Flora, here to help with game questions.'}</div>
+                        <div>🤖: ${currentLanguage === 'zh' ? '你可以问我：卡牌含义、职业特点、战术建议等。' : 'Ask me about: cards, careers, tactics, etc.'}</div>
+                        <div>🤖: ${currentLanguage === 'zh' ? '如果问题超出范围，我会建议你联系上级或使用DeepSeek。' : 'For other questions, use DeepSeek.'}</div>
+                    </div>
+                    
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="aiChatInput" style="flex:1; background:white; border:3px solid #ffb6c1; color:#ff69b4; padding:15px; border-radius:50px; font-size:16px; font-weight:bold;" placeholder="${currentLanguage === 'zh' ? '输入你的问题...' : 'Enter your question...'}">
+                        <button class="btn" style="padding:10px 20px;" onclick="sendAIMessage()">${currentLanguage === 'zh' ? '发送' : 'SEND'}</button>
+                        <button class="btn" style="padding:10px 20px;" onclick="closeAIModal()">${currentLanguage === 'zh' ? '关闭' : 'CLOSE'}</button>
+                    </div>
+                    
+                    <div style="margin-top:15px; text-align:center;">
+                        <a href="#" class="ai-external-link" style="display:inline-block; padding:8px 15px;" onclick="window.open('https://www.deepseek.com/', '_blank')">🔗 DeepSeek</a>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            window.currentAIModal = modal;
+        }
+
+        // ===== 发送消息到AI助手 =====
+        function sendAIMessage() {
+            const input = document.getElementById('aiChatInput').value.trim();
+            if (input === '') return;
+            
+            const history = document.getElementById('aiChatHistory');
+            history.innerHTML += `<div style="color:#ff69b4; margin-top:10px;">🧑‍✈️: ${input}</div>`;
+            
+            setTimeout(() => {
+                let reply = '';
+                const lowerInput = input.toLowerCase();
+                
+                const gameKeywords = ['卡牌', 'wave', '职业', 'career', '技能', 'skill', '体力', '智力', '技术', '魅力', '直觉', 
+                                     '抽卡', 'draw', '价值观', 'value', '战术', 'tactical', '游戏', 'game', '怎么玩', 'how to'];
+                
+                const isGameRelated = gameKeywords.some(k => lowerInput.includes(k));
+                
+                if (isGameRelated) {
+                    if (lowerInput.includes('卡牌') || lowerInput.includes('wave')) {
+                        if (drawnWaves.length > 0) {
+                            const randomWave = drawnWaves[Math.floor(Math.random() * drawnWaves.length)];
+                            reply = currentLanguage === 'zh' 
+                                ? `关于「${randomWave.name}」：${randomWave.desc} 属于${randomWave.domain}领域，${randomWave.stage}阶段，会消耗${randomWave.penalty.amount}点${randomWave.penalty.type}。`
+                                : `About 「${randomWave.name}」: ${randomWave.desc} (${randomWave.domain}, ${randomWave.stage}), costs ${randomWave.penalty.amount} ${randomWave.penalty.type}.`;
+                        } else {
+                            reply = currentLanguage === 'zh' ? '你还没抽卡呢！先抽卡我才能帮你分析～' : 'Draw cards first!';
+                        }
+                    }
+                    else if (lowerInput.includes('职业') || lowerInput.includes('career')) {
+                        const career = careers.find(c => c.id === selectedCareer);
+                        if (career) {
+                            reply = currentLanguage === 'zh' 
+                                ? `你现在是${career.nameZh}。属性：体力${career.skills.strength}❤️、智力${career.skills.intelligence}❤️、魅力${career.skills.charisma}❤️、技术${career.skills.tech}❤️、直觉${career.skills.instinct}❤️。`
+                                : `You are ${career.nameEn}. Stats: STR ${career.skills.strength}❤️, INT ${career.skills.intelligence}❤️, CHA ${career.skills.charisma}❤️, TECH ${career.skills.tech}❤️, INST ${career.skills.instinct}❤️.`;
+                        } else {
+                            reply = currentLanguage === 'zh' ? '你还没选择职业呢！先选职业吧。' : 'Choose a career first.';
+                        }
+                    }
+                    else if (lowerInput.includes('技能') || lowerInput.includes('skill') || lowerInput.includes('属性')) {
+                        reply = currentLanguage === 'zh' 
+                            ? `当前状态：体力${playerSkills.strength}❤️、智力${playerSkills.intelligence}❤️、魅力${playerSkills.charisma}❤️、技术${playerSkills.tech}❤️、直觉${playerSkills.instinct}❤️。`
+                            : `Current stats: STR ${playerSkills.strength}❤️, INT ${playerSkills.intelligence}❤️, CHA ${playerSkills.charisma}❤️, TECH ${playerSkills.tech}❤️, INST ${playerSkills.instinct}❤️.`;
+                    }
+                    else if (lowerInput.includes('战术') || lowerInput.includes('tactical')) {
+                        reply = currentLanguage === 'zh' 
+                            ? '战术建议：在战术讨论中提到你抽到的卡牌（至少2张），并结合你的职业专长，这样能恢复更多技能点！'
+                            : 'Tactical tip: Mention at least 2 drawn cards and your career expertise to recover more skill points!';
+                    } else {
+                        reply = currentLanguage === 'zh' 
+                            ? '这个问题很有趣！你可以去问问DeepSeek获得更详细的解答～'
+                            : 'Interesting question! Try DeepSeek for detailed answers.';
+                    }
+                } else {
+                    const randomResponses = currentLanguage === 'zh' 
+                        ? [
+                            '📡 正在联系森林总部，请稍候...',
+                            '🤔 这个问题超出我的知识范围，建议使用DeepSeek查询。',
+                            '⚠️ 森林信号干扰严重，无法获取答案。',
+                            '🔄 转接中... 转接失败，请自行搜索。',
+                            '💡 这个问题和森林任务无关，我无法回答。'
+                        ]
+                        : [
+                            '📡 Contacting forest command...',
+                            '🤔 Out of scope. Use DeepSeek.',
+                            '⚠️ Forest signal interference.',
+                            '🔄 Transfer failed.',
+                            '💡 Not mission related.'
+                        ];
+                    reply = randomResponses[Math.floor(Math.random() * randomResponses.length)];
+                }
+                
+                history.innerHTML += `<div style="color:#a5d6a7; margin-top:10px;">🤖: ${reply}</div>`;
+                history.scrollTop = history.scrollHeight;
+                document.getElementById('aiChatInput').value = '';
+            }, 500);
+        }
+
+        // ===== 关闭AI弹窗 =====
+        function closeAIModal() {
+            if (window.currentAIModal) {
+                document.body.removeChild(window.currentAIModal);
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
